@@ -112,9 +112,9 @@ class XposCommand extends Command
     protected function sshExists(): bool
     {
         if (PHP_OS_FAMILY === 'Windows') {
-            $process = Process::fromShellCommand('where ssh 2>nul');
+            $process = new Process(['where', 'ssh']);
         } else {
-            $process = Process::fromShellCommand('which ssh 2>/dev/null');
+            $process = new Process(['which', 'ssh']);
         }
 
         $process->run();
