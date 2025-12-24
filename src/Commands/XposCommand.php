@@ -207,7 +207,8 @@ class XposCommand extends Command
 
         $this->tunnelProcess = new Process($command);
         $this->tunnelProcess->setTimeout(null);
-        $this->tunnelProcess->setTty(Process::isTtySupported());
+        // Don't use TTY mode - we want to capture and filter output
+        // $this->tunnelProcess->setTty(Process::isTtySupported());
 
         $publicUrl = null;
         $urlDisplayed = false;
