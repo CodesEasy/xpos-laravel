@@ -211,10 +211,14 @@ class XposCommand extends Command
 
         $publicUrl = null;
         $urlDisplayed = false;
+        $outputBuffer = '';
 
-        $this->tunnelProcess->start(function ($type, $buffer) use (&$publicUrl, &$urlDisplayed) {
-            // Parse output for the public URL (supports alphanumeric and hyphens)
-            if (preg_match('/(https:\/\/[a-z0-9-]+\.xpos\.to)/', $buffer, $matches)) {
+        $this->tunnelProcess->start(function ($type, $buffer) use (&$publicUrl, &$urlDisplayed, &$outputBuffer) {
+            // Accumulate output for better URL detection
+            $outputBuffer .= $buffer;
+
+            // Parse output for the public URL (supports alphanumeric and hyphens, case-insensitive)
+            if (!$publicUrl && preg_match('/(https:\/\/[a-z0-9-]+\.xpos\.to)/i', $outputBuffer, $matches)) {
                 $publicUrl = $matches[1];
 
                 if (!$urlDisplayed) {
