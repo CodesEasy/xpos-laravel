@@ -43,10 +43,6 @@ class XposServiceProvider extends ServiceProvider
      */
     protected function configureTrustProxies(): void
     {
-        if (!class_exists(\Illuminate\Http\Middleware\TrustProxies::class)) {
-            return;
-        }
-
         // Only configure if we have a request (not in console)
         if ($this->app->runningInConsole()) {
             return;
@@ -57,7 +53,19 @@ class XposServiceProvider extends ServiceProvider
 
             // Only trust proxy if accessed via xpos.to domain
             if (str_ends_with($host, '.xpos.to')) {
-                \Illuminate\Http\Middleware\TrustProxies::at('*');
+                // Laravel 11+ has TrustProxies::at() method
+                if (method_exists(\Illuminate\Http\Middleware\TrustProxies::class, 'at')) {
+                    \Illuminate\Http\Middleware\TrustProxies::at('*');
+                } else {
+                    // Laravel 10 fallback: use Request::setTrustedProxies()
+                    request()->setTrustedProxies(
+                        ['*'],
+                        \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
+                        \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
+                        \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |
+                        \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO
+                    );
+                }
             }
         } catch (\Throwable) {
             // Silently fail if request not available
