@@ -49,5 +49,8 @@ pnpm-lock.yaml
 *.key
 *.pem
 
+# SSH Keys
+.ssh/
+
 # Project specific
 .xpos.pid
