@@ -6,6 +6,12 @@
 
 Instant public URLs for Laravel development. Share your local Laravel app with a single command.
 
+> ⚠️ This repository has been moved to  
+> https://github.com/GetXPOS/laravel  
+>
+> All new releases, updates, and active development now happen there.
+
+
 🌐 **[xpos.dev](https://xpos.dev)**
 
 ## Features
